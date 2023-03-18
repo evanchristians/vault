@@ -11,11 +11,11 @@ export default function Document() {
           crossOrigin=""
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,600;0,700;0,800;1,500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Open+Sans:wght@300;400;700&display=swap"
           rel="stylesheet"
         />
       </Head>
-      <body className="bg-gradient-to-t from-base-dark to-base-dark text-white min-h-screen">
+      <body className="min-h-screen bg-gradient-to-t from-base-dark to-base-dark text-white">
         <Main />
         <NextScript />
       </body>

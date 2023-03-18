@@ -20,6 +20,25 @@ const SideBar = ({ children }: { children: ReactNode }) => {
   );
 };
 
+const RollDisplay = ({ roll }: { roll: RollResult }) => {
+  return (
+    <li className="flex items-start gap-2 rounded bg-card p-2">
+      <div className="flex flex-col items-start gap-2">
+        <span className="rounded bg-primary px-1 py-0.5 text-xs">
+          {roll.command}
+        </span>
+        <span className="font-mono">
+          {roll.commands.join(" ")} ={" "}
+          <span className="rounded bg-secondary px-1.5 py-0.5 font-semibold">
+            {roll.result}
+          </span>
+        </span>
+      </div>
+      <p className="ml-auto text-xs text-white/50 shrink-0">{timeAgo(roll.rolledAt)}</p>
+    </li>
+  );
+};
+
 const RollInput = () => {
   const animationDuration = 200;
 
@@ -79,44 +98,26 @@ const Home: NextPage = () => {
   const bottomRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    bottomRef.current?.scrollIntoView();
   }, [rolls]);
 
   return (
     <div className="fixed inset-0 flex h-screen">
-      <div className="hidden sm:flex grow p-5">
+      <div className="hidden grow p-5 sm:flex">
         <div className="grow rounded-xl border border-white/5 bg-base">
-          <header className="py-2 px-4 border-b border-white/5 flex items-center gap-2">
-            <h1 className="font-semibold text-2xl">Vault</h1>
+          <header className="flex items-center gap-2 border-b border-white/5 py-2 px-4">
+            <h1 className="text-2xl font-semibold">Vault</h1>
           </header>
         </div>
       </div>
       <SideBar>
         <header className="absolute top-0 left-0 flex w-full items-center gap-2 border-b border-white/5 bg-base/50 py-2 px-5 backdrop-blur">
-          <FaDiceD20 className="text-lg text-tertiary" />
+          <FaDiceD20 className="text-lg text-secondary" />
           <h2 className="text-2xl font-semibold">Rolls</h2>
         </header>
         <ul className="no-scrollbar flex h-full flex-col gap-2 overflow-y-scroll py-14">
           {rolls.map((roll, index) => (
-            <li
-              key={index}
-              className="flex items-start gap-2 rounded bg-card p-2"
-            >
-              <div className="flex flex-col items-start gap-2">
-                <span className="rounded bg-primary px-1 py-0.5 text-xs">
-                  {roll.command}
-                </span>
-                <span className="font-mono text-lg">
-                  {roll.commands.join(" ")} ={" "}
-                  <span className="rounded bg-secondary px-1.5 py-0.5 font-bold">
-                    {roll.result}
-                  </span>
-                </span>
-              </div>
-              <p className="ml-auto text-xs text-white/50">
-                {timeAgo(roll.rolledAt)}
-              </p>
-            </li>
+            <RollDisplay key={index} roll={roll} />
           ))}
           <li ref={bottomRef} />
         </ul>

@@ -14,6 +14,7 @@ const config = {
       },
       fontFamily: {
         sans: ["Poppins", "sans-serif"],
+        mono: ["Courier Prime", "monospace"],
       }
     },
   },

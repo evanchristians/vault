@@ -1,7 +1,6 @@
 import { type NextPage } from "next";
 import { type ReactNode, useState, useEffect, useRef } from "react";
 import { FaDiceD20 } from "react-icons/fa";
-import {SiDungeonsanddragons} from "react-icons/si";
 import { roll, type RollResult } from "~/lib/roll";
 import { timeAgo } from "~/lib/time";
 
@@ -13,7 +12,7 @@ const rollsAtom = atomWithStorage<RollResult[]>("rolls", []);
 
 const SideBar = ({ children }: { children: ReactNode }) => {
   return (
-    <aside className="flex h-full w-full max-w-md p-5 pl-0">
+    <aside className="flex h-full w-full max-w-md p-2 sm:p-5 sm:pl-0">
       <div className="relative flex grow flex-col gap-2 overflow-hidden rounded-xl border border-white/5 bg-base p-4">
         {children}
       </div>
@@ -85,7 +84,7 @@ const Home: NextPage = () => {
 
   return (
     <div className="fixed inset-0 flex h-screen">
-      <div className="flex grow p-5">
+      <div className="hidden sm:flex grow p-5">
         <div className="grow rounded-xl border border-white/5 bg-base">
           <header className="py-2 px-4 border-b border-white/5 flex items-center gap-2">
             <h1 className="font-semibold text-2xl">Vault</h1>

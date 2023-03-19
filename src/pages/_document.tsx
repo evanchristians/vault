@@ -15,7 +15,7 @@ export default function Document() {
           rel="stylesheet"
         />
       </Head>
-      <body className="min-h-screen bg-gradient-to-t from-base-dark to-base-dark text-white">
+      <body className="min-h-screen bg-gradient-to-t from-base-dark to-base-dark text-white overscroll-none">
         <Main />
         <NextScript />
       </body>

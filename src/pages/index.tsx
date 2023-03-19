@@ -34,7 +34,9 @@ const RollDisplay = ({ roll }: { roll: RollResult }) => {
           </span>
         </span>
       </div>
-      <p className="ml-auto text-xs text-white/50 shrink-0">{timeAgo(roll.rolledAt)}</p>
+      <p className="ml-auto shrink-0 text-xs text-white/50">
+        {timeAgo(roll.rolledAt)}
+      </p>
     </li>
   );
 };
@@ -93,6 +95,22 @@ const RollInput = () => {
     </form>
   );
 };
+
+const ClearButton = () => {
+  const [rolls, setRolls] = useAtom(rollsAtom);
+
+  if (rolls.length === 0) {
+    return null;
+  }
+  return (
+    <button
+      className="rounded text-xs border border-white/5 px-3 py-1 text-white/80 hover:text-white/100 hover:bg-card transition-all"
+      onClick={() => setRolls([])}
+    >
+      Clear
+    </button>
+  );
+};
 const Home: NextPage = () => {
   const rolls = useAtomValue(rollsAtom);
   const bottomRef = useRef<HTMLLIElement>(null);
@@ -111,9 +129,12 @@ const Home: NextPage = () => {
         </div>
       </div>
       <SideBar>
-        <header className="absolute top-0 left-0 flex w-full items-center gap-2 border-b border-white/5 bg-base/50 py-2 px-5 backdrop-blur">
+        <header className="absolute top-0 left-0 flex w-full items-center gap-2 border-b border-white/5 bg-base/30 py-2 px-5 backdrop-blur">
           <FaDiceD20 className="text-lg text-secondary" />
           <h2 className="text-2xl font-semibold">Rolls</h2>
+          <div className="ml-auto">
+            <ClearButton />
+          </div>
         </header>
         <ul className="no-scrollbar flex h-full flex-col gap-2 overflow-y-scroll py-14">
           {rolls.map((roll, index) => (

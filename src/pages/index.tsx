@@ -1,14 +1,14 @@
 import { type NextPage } from "next";
-import { type ReactNode, useState, useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { FaDiceD20 } from "react-icons/fa";
-import { roll, type RollResult } from "~/lib/roll";
+import { type RollResult } from "~/lib/roll";
 import { timeAgo } from "~/lib/time";
 
 import { useAtom, useAtomValue } from "jotai";
-import { atomWithStorage } from "jotai/utils";
-
-const commandAtom = atomWithStorage<string>("command", "");
-const rollsAtom = atomWithStorage<RollResult[]>("rolls", []);
+import { Overview } from "~/components/Overview";
+import { characterAtom, dummyCharacter } from "~/lib/character";
+import { api } from "~/utils/api";
+import { rollsAtom, RollInput } from "~/components/Roll";
 
 const SideBar = ({ children }: { children: ReactNode }) => {
   return (
@@ -41,61 +41,6 @@ const RollDisplay = ({ roll }: { roll: RollResult }) => {
   );
 };
 
-const RollInput = () => {
-  const animationDuration = 200;
-
-  const [command, setCommand] = useAtom(commandAtom);
-  const [error, setError] = useState<string | null>(null);
-  const [rolls, setRolls] = useAtom(rollsAtom);
-
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    if (error) {
-      timeout = setTimeout(() => {
-        setError(null);
-      }, animationDuration);
-    }
-    return () => clearTimeout(timeout);
-  }, [error]);
-
-  const handleRoll = (command: string) => {
-    try {
-      const newRoll = roll(command);
-      setRolls([...rolls, newRoll]);
-    } catch (err) {
-      setError((err as Error).message ?? "Unknown error");
-    }
-  };
-
-  return (
-    <form
-      onSubmit={(evt) => {
-        evt.preventDefault();
-        if (command && command.length !== 0) {
-          handleRoll(command);
-        }
-      }}
-      className="flex items-center gap-2"
-    >
-      <input
-        type="text"
-        placeholder="Roll command, e.g. 1d20+5"
-        value={command}
-        onChange={(evt) => setCommand(evt.target.value)}
-        className="w-full rounded bg-card/80 p-2 focus:outline-none"
-      />
-      <button
-        className={`rounded bg-secondary px-3 py-2 text-white ${
-          error ? "shake" : ""
-        }`}
-        type="submit"
-      >
-        <FaDiceD20 className="text-xl" />
-      </button>
-    </form>
-  );
-};
-
 const ClearButton = () => {
   const [rolls, setRolls] = useAtom(rollsAtom);
 
@@ -104,7 +49,7 @@ const ClearButton = () => {
   }
   return (
     <button
-      className="rounded text-xs border border-white/5 px-3 py-1 text-white/80 hover:text-white/100 hover:bg-card transition-all"
+      className="rounded border border-white/5 px-3 py-1 text-xs text-white/80 transition-all hover:bg-card hover:text-white/100"
       onClick={() => setRolls([])}
     >
       Clear
@@ -114,6 +59,17 @@ const ClearButton = () => {
 const Home: NextPage = () => {
   const rolls = useAtomValue(rollsAtom);
   const bottomRef = useRef<HTMLLIElement>(null);
+  const [character, setCharacter] = useAtom(characterAtom);
+  const { data: id } = api.auth.randomId.useQuery();
+
+  useEffect(() => {
+    if (!character && id) {
+      setCharacter({
+        id,
+        ...dummyCharacter,
+      });
+    }
+  }, [id, character, setCharacter]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView();
@@ -122,11 +78,7 @@ const Home: NextPage = () => {
   return (
     <div className="fixed inset-0 flex h-screen">
       <div className="hidden grow p-5 sm:flex">
-        <div className="grow rounded-xl border border-white/5 bg-base">
-          <header className="flex items-center gap-2 border-b border-white/5 py-2 px-4">
-            <h1 className="text-2xl font-semibold">Vault</h1>
-          </header>
-        </div>
+        <Overview />
       </div>
       <SideBar>
         <header className="absolute top-0 left-0 flex w-full items-center gap-2 border-b border-white/5 bg-base/30 py-2 px-5 backdrop-blur">

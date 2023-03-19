@@ -1,8 +1,7 @@
-# Vault (name pending)
+# CSRPN
+#### (Character Sheet Random Provisional Name)
 
-#### (D&D Character/Campaign Notebook)
-
-A feature-rich digital notebook for Dungeons & Dragons characters and campaigns.
+A feature-rich digital notebook for TTRPG characters and campaigns.
 The aim is to providing a smooth user experience and a large toolset for customization, with the goal of allowing dungeoneers to focus their attention on roleplay instead of tweaking character sheets
 
 ### Dream Features

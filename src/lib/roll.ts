@@ -22,15 +22,18 @@ const parseAndRoll = (roll: string, sign = "+") => {
 const sanitise = (command: string) => {
   const withoutSpecialCharacters = command.replace(/[^d\d\s\+\-]/g, "");
   const withoutMultipleSpaces = withoutSpecialCharacters.replace(/\s+/g, "");
-  const withoutSpacesAroundSigns = withoutMultipleSpaces.replace(/\s(\+|-)\s/g, "$1");
+  const withoutSpacesAroundSigns = withoutMultipleSpaces.replace(
+    /\s(\+|-)\s/g,
+    "$1"
+  );
   return withoutSpacesAroundSigns;
-}; 
+};
 
 const isValid = (command: string) => {
   const endsWithNumber = !!command.match(/\d+$/);
   const startsWithNumberOrD = !!command.match(/^[d\d]/);
   return endsWithNumber && startsWithNumberOrD;
-}
+};
 
 export const roll = (command: string) => {
   command = sanitise(command);
@@ -46,16 +49,17 @@ export const roll = (command: string) => {
     const isRoll = !!rollOrModifier.match(/d\d+/);
 
     if (isRoll) {
-      const { rolls, result, times, sides } = parseAndRoll(rollOrModifier, sign);
+      const { rolls, result, times, sides } = parseAndRoll(
+        rollOrModifier,
+        sign
+      );
       parts.push(result);
       commands.push(`${sign} ${times}d${sides}(${rolls.join(", ")})`);
     } else if (rollOrModifier.match(/(\+|-)/)) {
       sign = rollOrModifier;
     } else {
       const modifier = makePosOrNeg(sign, parseInt(rollOrModifier));
-      commands.push(
-        `${sign} ${Math.abs(modifier)}`
-      );
+      commands.push(`${sign} ${Math.abs(modifier)}`);
       parts.push(modifier);
     }
   }
@@ -65,7 +69,7 @@ export const roll = (command: string) => {
     result: parts.reduce((a, b) => a + b, 0),
     parts,
     commands,
-    rolledAt: new Date()
+    rolledAt: new Date(),
   };
 };
 
